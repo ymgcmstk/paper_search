@@ -30,3 +30,4 @@ def update_db(data_dict):
     query = QUERY_REPLACE % ', '.join(['("%s", "%s")' % (key, value) for key, value in data_dict.iteritems()])
     print query
     CURSOR.execute(query)
+    CONNECTOR.commit()
