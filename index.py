@@ -33,9 +33,11 @@ def save():
     update_db(data_dict)
     return
 
+# request.forms.keys()
+
 @post('/load')
 def load():
-    keys = request.forms.keys()
+    keys = request.forms.get('keys').split(',')
     results = get_from_db(keys)
     return results
 

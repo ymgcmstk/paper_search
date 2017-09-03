@@ -3,8 +3,10 @@
 
 from settings import *
 
-QUERY_SELECT = 'SELECT key, value FROM %s ' % TABLE_NAME + \
+QUERY_SELECT_IN = 'SELECT key, value FROM %s ' % TABLE_NAME + \
                'WHERE key in (%s)'
+QUERY_SELECT_LIKE = 'SELECT key, value FROM %s ' % TABLE_NAME + \
+                    'WHERE key LIKE %s'
 QUERY_REPLACE = 'INSERT OR REPLACE INTO %s ' % TABLE_NAME + \
                 '(key, value) VALUES %s'
 # QUERY_REPLACE % ', '.join(['(%s,%s)' % (key, value) for key, value in data_dict])
@@ -21,13 +23,18 @@ def create_table():
     CONNECTOR.commit()
 
 def get_from_db(keys):
-    print QUERY_SELECT % ','.join(keys)
-    CURSOR.execute(QUERY_SELECT % ','.join(keys))
+    query = QUERY_SELECT_IN % ','.join(['"%s"' % cur_key for cur_key in keys])
+    CURSOR.execute(query)
+    results = {i[0]: i[1] for i in CURSOR.fetchall()}
+    return results
+
+def get_like_from_db(key):
+    query = QUERY_SELECT_LIKE % key
+    CURSOR.execute(query)
     results = {i[0]: i[1] for i in CURSOR.fetchall()}
     return results
 
 def update_db(data_dict):
     query = QUERY_REPLACE % ', '.join(['("%s", "%s")' % (key, value) for key, value in data_dict.iteritems()])
-    print query
     CURSOR.execute(query)
     CONNECTOR.commit()

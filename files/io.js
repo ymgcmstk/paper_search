@@ -5,18 +5,22 @@ $(function(){
             $('#db').empty();
     }
 
-    function search(key) {
+    function get_values(keys) {
+        var input_data = {keys: keys.join(",")};
+        console.log(input_data);
         clear_data();
         $.ajax({
             url: './load',
             type: 'POST',
             dataType: 'json',
-            data: {key},
+            data: input_data,
             timeout: 5000,
         }).done(function(data) {
             console.log(data);
-            $('#db').append('<div>key: ' + key + '</div>');
-            $('#db').append('<div>value: ' + data[key] + '</div>');
+            for (key in data) {
+                $('#db').append('<div>key: ' + key + '</div>');
+                $('#db').append('<div>value: ' + data[key] + '</div>');
+            }
         }).fail(function(jqXHR, textStatus, errorThrown) {
             console.log(jqXHR);
             console.log(textStatus);
@@ -25,17 +29,18 @@ $(function(){
         });
     }
 
-    function update(key, value) {
-        var data = {};
-        data[key] = value;
+    function update(input_data) {
         $.ajax({
             url: './save',
             type: 'POST',
-            data: data,
+            data: input_data,
             timeout: 5000
-        }).done(function(data) {
-            console.log(data);
-            search(key);
+        }).done(function(data) { // console.log(data);
+            var keys = [];
+            for (key in input_data) {
+                keys.push(key);
+            }
+            get_values(keys);
         }).fail(function(jqXHR, textStatus, errorThrown) {
             console.log(jqXHR);
             console.log(textStatus);
@@ -50,7 +55,7 @@ $(function(){
         if($('#skey').val() == null) {
             return;
         }
-        search($('#skey').val());
+        get_values([$('#skey').val()]);
     });
 
     $('#updatebtn').on('click', function() {
@@ -60,7 +65,9 @@ $(function(){
         if($('#uvalue').val() == null) {
             return;
         }
-        update($('#ukey').val(), $('#uvalue').val());
+        var data = {};
+        data[$('#ukey').val()] = $('#uvalue').val();
+        update(data);
     });
     // --------- bindings ---------
 });

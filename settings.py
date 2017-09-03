@@ -5,7 +5,7 @@ import os
 import sqlite3
 
 HOST_NAME = '0.0.0.0'
-PORT = 8084
+PORT = 8085
 ROOT_DIR = os.path.dirname(os.path.abspath(os.path.join(os.getcwd(), __file__)))
 DATA_DIR = os.path.join(ROOT_DIR, 'data')
 FILE_DIR = os.path.join(ROOT_DIR, 'files')
