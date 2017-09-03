@@ -2,12 +2,8 @@
 # -*- coding:utf-8 -*-
 
 from bottle import route, run, template, post, static_file, request
-from mytoolbox import *
 from db_toolbox import *
 from settings import *
-import os
-import pprint
-set_debugger(send_email=False, error_func=None)
 
 @route('/static/<filename>')
 def get_static_file(filename):

@@ -3,4 +3,5 @@
 *.pyc
 *.pkl
 *.mat
+*.db
 ymgc_memo
